@@ -14,9 +14,33 @@ There are 4 steps when it comes to Text Processing
 # The Natural Language ToolKit does most of the text preprocessing 
 import nltk
 from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem.porter import PorterStemmer
+from nltk.stem import WordNetLemmatizer
 
+## Step 1: Data Processing ##
 #This function tokenizes the sentence
 tokens = word_tokenize("The quick brown fox jumps over the lazy dog")
-print(tokens)
+print("After tokenization\n", tokens)
 
+#Now we will remove the stop words
 nltk.download('stopwords')
+stop_words = set(stopwords.words('english'))
+tokens = [w for w in tokens if not w in stop_words]
+print("After removing stop words\n", tokens)
+
+#Now we will stem the words
+porter = PorterStemmer()
+stems = []
+for t in tokens:
+    stems.append(porter.stem(t))
+print("After stemming\n", stems)
+
+#Last thing for this step, we lemmatize the stems
+lemmatizer = WordNetLemmatizer()
+lemmatized = []
+for s in stems:
+    lemmatized.append(lemmatizer.lemmatize(s))
+print("After lemmatization\n", lemmatized)
+
+## Step 2: Feature Extraction ##
