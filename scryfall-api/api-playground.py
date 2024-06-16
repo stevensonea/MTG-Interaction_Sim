@@ -3,35 +3,34 @@ import json
 import os
 from time import sleep
 
-def searchCard(cards):
+def searchCard(card_name, set):
     url = "https://api.scryfall.com/cards/search"
+    params = {
+        'q': card_name + " set:" + set
+    }
+    response = requests.get(url, params=params)
 
-    for card in cards:
-        params = {
-            'q': card
-        }
-        response = requests.get(url, params=params)
-
-        # Check if the request was successful
-        if response.status_code == 200:
-            data = response.json()
-            
-            directory = "scryfall-api/json-files"
-            if not os.path.exists(directory):
-                os.makedirs(directory)
-
-            filename = os.path.join(directory, card + ".json")
-
-            with open(filename, 'w') as file:
-                json.dump(data, file, indent=4)
-
-            print("Success")
+    # Check if the request was successful
+    if response.status_code == 200:
+        data = response.json()
         
-        else:
-            print(f"Error: {response.status_code}")
-        
-        sleep(.1)
+        directory = "scryfall-api/json-files"
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        filename = os.path.join(directory, card_name + ".json")
+
+        with open(filename, 'w') as file:
+            json.dump(data, file, indent=4)
+
+        print("Success")
+    
+    else:
+        print(f"Error: {response.status_code}")
+
+    sleep(0.1)
     
 if __name__ == "__main__":
-    cards = ["Black Lotus", "Ashling", "Sol Ring", "Sulfer"]
-    card_data = searchCard(cards)
+    card_name = "Ashling, Flame Dancer"
+    card_set = "mh3"
+    card_data = searchCard(card_name, card_set)
